@@ -1,5 +1,6 @@
 package com.masa.item.controller;
 
+import com.masa.item.DTO.PriceAndCategories;
 import com.masa.item.model.Item;
 import com.masa.item.service.IItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,10 @@ public class ItemController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Item> updateItem(@RequestParam Long itemId, @RequestParam Integer quantity) {
-        return itemService.updateStock(itemId, quantity)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+    public ResponseEntity<Boolean> updateItem(@RequestParam Long itemId, @RequestParam Integer quantity) {
+        // Log to check if the method is called
+        System.out.println("ItemController.updateItem called");
+        return ResponseEntity.ok(itemService.updateStock(itemId, quantity));
     }
 
     @PostMapping("/new")
@@ -32,6 +33,19 @@ public class ItemController {
         return itemService.createItem(item)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @GetMapping("/exists/{itemId}")
+    public ResponseEntity<Boolean> existsById(@PathVariable Long itemId) {
+        return ResponseEntity.ok(itemService.existsById(itemId));
+    }
+
+    @GetMapping("/query")
+    public ResponseEntity<List<Item>> getItemsByCategoriesOrPriceRange(@RequestBody PriceAndCategories query) {
+        return  ResponseEntity.ok(itemService.getItemsByCategoriesOrPriceRange(
+                query.getCategoryIds(),
+                query.getMinPrice(),
+                query.getMaxPrice()));
     }
 
     @GetMapping("/all")
