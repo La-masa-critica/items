@@ -30,7 +30,7 @@ public class Item implements Serializable {
     //private String image;
     private Boolean enabled;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "item_category",
             joinColumns = @JoinColumn(name = "item_id"),
