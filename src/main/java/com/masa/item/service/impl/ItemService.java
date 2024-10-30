@@ -1,6 +1,7 @@
 package com.masa.item.service.impl;
 
 import com.masa.item.model.Item;
+import com.masa.item.model.ItemCategory;
 import com.masa.item.repository.ItemCategoryRepository;
 import com.masa.item.repository.ItemRepository;
 import com.masa.item.service.IItemService;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService implements IItemService {
@@ -27,16 +31,28 @@ public class ItemService implements IItemService {
         }
         BigDecimal minPriceBigDecimal = new BigDecimal(minPrice);
         BigDecimal maxPriceBigDecimal = new BigDecimal(maxPrice);
-        return itemRepository.findItemsByCategoriesOrPriceRange(categoryIds, minPriceBigDecimal, maxPriceBigDecimal);
+        int categoryCount = categoryIds.size();
+        return itemRepository.findItemsByCategoriesAndPriceRange(categoryIds, categoryCount, minPriceBigDecimal, maxPriceBigDecimal);
     }
 
     @Override
     @Transactional
     public List<Item> getCategoryItems(List<Long> categoryIds) {
-        return categoryIds.stream()
-                .map(itemCategoryRepository::findItemCategoryByCategoryId)
-                .flatMap(List::stream)
-                .map(itemCategory -> itemRepository.findById(itemCategory.getItemId()))
+        List<ItemCategory> itemCategories = categoryIds.stream()
+                .flatMap(categoryId -> itemCategoryRepository.findItemCategoryByCategoryId(categoryId).stream())
+                .toList();
+
+        Set<Long> itemIds = itemCategories.stream()
+                .collect(Collectors.groupingBy(
+                        ItemCategory::getItemId,
+                        Collectors.counting()
+                ))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() == categoryIds.size())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+        return itemIds.stream()
+                .map(itemRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();

@@ -19,13 +19,30 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByEnabledTrue();
     List<Item> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 
+
+//    @Query("SELECT i FROM Item i " +
+//            "JOIN item_category ic ON i.id = ic.itemId " +
+//            "WHERE ic.categoryId IN :categoryIds " +
+//            "GROUP BY i.id " +
+//            "HAVING COUNT(DISTINCT ic.categoryId) = :categoryCount " +
+//            "AND i.price BETWEEN :minPrice AND :maxPrice " +
+//            "AND i.enabled = true")
     @Query("SELECT i FROM Item i " +
             "JOIN item_category ic ON i.id = ic.itemId " +
-            "WHERE ic.categoryId IN :categoryIds " +
+            "WHERE i.id IN (" +
+            "    SELECT i.id " +
+            "    FROM Item i " +
+            "    JOIN item_category ic ON i.id = ic.itemId " +
+            "    WHERE ic.categoryId IN :categoryIds " +
+            "    GROUP BY i.id " +
+            "    HAVING COUNT(DISTINCT ic.categoryId) = :categoryCount " +
+            ") " +
             "AND i.price BETWEEN :minPrice AND :maxPrice " +
-            "AND i.enabled = true")
-    List<Item> findItemsByCategoriesOrPriceRange(
+            "AND i.enabled = true"
+    )
+    List<Item> findItemsByCategoriesAndPriceRange(
             @Param("categoryIds") List<Long> categoryIds,
+            @Param("categoryCount") int categoryCount,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice
     );
