@@ -11,17 +11,17 @@ public interface IItemService {
     Optional<Item> createItem(Item item);
 
     //Item updateItem(Item item);
-    Boolean updateStock(Long itemId, Integer quantity);
+    Optional<Item> updateStock(Long itemId, Integer quantity);
 
-    Boolean existsByName(String name);
+    Optional<Item> incrementStock(Long itemId, Integer quantity);
+
+    Optional<Item> decrementStock(Long itemId, Integer quantity);
 
     Boolean existsById(Long itemId);
 
     List<Item> getItems();
 
-    List<Item> getCategoryItems(List<Long> categoryIds);
-
-    List<Item> getItemsByCategoriesOrPriceRange(List<Long> categoryIds, String minPrice, String maxPrice);
+    List<Item> getItemsByFilters(List<Long> categoryIds, String minPrice, String maxPrice);
 
     void deleteItem(Long itemId);
 }

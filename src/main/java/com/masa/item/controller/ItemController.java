@@ -1,8 +1,8 @@
 package com.masa.item.controller;
 
-import com.masa.item.DTO.PriceAndCategories;
 import com.masa.item.model.Item;
 import com.masa.item.service.IItemService;
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +21,18 @@ public class ItemController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Boolean> updateItem(@RequestParam Long itemId, @RequestParam Integer quantity) {
-        // Log to check if the method is called
-        System.out.println("ItemController.updateItem called");
-        return ResponseEntity.ok(itemService.updateStock(itemId, quantity));
+    @PutMapping("/increment")
+    public ResponseEntity<Item> incrementStock(@RequestParam Long itemId, @RequestParam Integer quantity) {
+        return itemService.incrementStock(itemId, quantity)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @PutMapping("/decrement")
+    public ResponseEntity<Item> decrementStock(@RequestParam Long itemId, @RequestParam Integer quantity) {
+        return itemService.decrementStock(itemId, quantity)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PostMapping("/new")
@@ -40,12 +47,16 @@ public class ItemController {
         return ResponseEntity.ok(itemService.existsById(itemId));
     }
 
-    @GetMapping("/query")
-    public ResponseEntity<List<Item>> getItemsByCategoriesOrPriceRange(@RequestBody PriceAndCategories query) {
-        return  ResponseEntity.ok(itemService.getItemsByCategoriesOrPriceRange(
-                query.getCategoryIds(),
-                query.getMinPrice(),
-                query.getMaxPrice()));
+    @GetMapping("/filter")
+    public ResponseEntity<List<Item>> getItemsByCategoriesOrPriceRange(
+            @Nullable @RequestParam List<Long> categoryIds,
+            @Nullable @RequestParam String minPrice,
+            @Nullable @RequestParam String maxPrice) {
+        return  ResponseEntity.ok(itemService.getItemsByFilters(
+                categoryIds,
+                minPrice,
+                maxPrice
+        ));
     }
 
     @GetMapping("/all")

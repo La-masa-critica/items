@@ -23,11 +23,9 @@ public class Item implements Serializable {
     private Long id;
 
     private String name;
-    //private String description;
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
     private Integer stock;
-    //private String image;
     private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)

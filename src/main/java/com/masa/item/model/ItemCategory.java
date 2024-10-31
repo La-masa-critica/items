@@ -1,26 +1,29 @@
 package com.masa.item.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-@Entity(name = "item_category")
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity(name = "item_category")
 public class ItemCategory {
     @EmbeddedId
-    private ItemCategoryId id = new ItemCategoryId();
+    private ItemCategoryId id;
 
-    @Column(name = "category_id", insertable = false, updatable = false)
-    private Long categoryId;
+    @JsonIgnore
+    @ManyToOne
+    @MapsId("itemId")
+    @JoinColumn(name = "item_id")
+    private Item item;
 
-    @Column(name = "item_id", insertable = false, updatable = false)
-    private Long itemId;
+    @ManyToOne
+    @MapsId("categoryId")
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

@@ -10,8 +10,5 @@ public interface ICategoryService {
 
     Optional<Category> createCategory(Category category);
 
-    //Category updateCategory(Category category);
-    //Boolean existsByName(String name);
-    //Boolean existsById(Long categoryId);
     List<Category> getCategories();
 }

@@ -1,29 +1,17 @@
 package com.masa.item.model;
 
-import jakarta.persistence.Column;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Embeddable;
+import lombok.*;
 
-import java.util.Objects;
+import java.io.Serializable;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class ItemCategoryId {
-    @Column(name = "category_id")
-    private Long categoryId;
-    @Column(name = "item_id")
+@EqualsAndHashCode
+@Embeddable
+public class ItemCategoryId implements Serializable {
     private Long itemId;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ItemCategoryId that)) return false;
-        return Objects.equals(getCategoryId(), that.getCategoryId()) &&
-                Objects.equals(getItemId(), that.getItemId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getCategoryId(), getItemId());
-    }
+    private Long categoryId;
 }
