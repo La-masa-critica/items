@@ -5,8 +5,7 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa final
-FROM docker.io/eclipse-temurin:21 AS final
+FROM ghcr.io/la-masa-critica/jre-spring:main AS final
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8082
