@@ -65,16 +65,19 @@ public class ItemService implements IItemService {
         return updateStock(itemId, -quantity);
     }
 
-public Optional<Item> updateStock(Long itemId, Integer quantity) {
-    return itemRepository.findById(itemId)
-            .map(item -> {
-                int newStock = item.getStock() + quantity;
-                if (newStock < 0) {
-                    return Optional.<Item>empty();
-                }
-                return Optional.of(itemRepository.save(item.setStock(newStock)));
-            }).orElse(Optional.empty());
-}
+    @Transactional
+    @Override
+    public Optional<Item> updateStock(Long itemId, Integer quantity) {
+        return itemRepository.findById(itemId)
+                .map(item -> {
+                    int newStock = item.getStock() + quantity;
+                    if (newStock < 0) {
+                        return Optional.<Item>empty();
+                    }
+                    return Optional.of(itemRepository.save(item.setStock(newStock)));
+                }).orElse(Optional.empty());
+    }
+
     @Override
     public Boolean existsById(Long itemId) {
         return itemRepository.findById(itemId).isPresent();

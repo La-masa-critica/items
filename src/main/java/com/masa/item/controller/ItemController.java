@@ -21,6 +21,13 @@ public class ItemController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/stock")
+    public ResponseEntity<Item> updateStock(@RequestParam Long itemId, @RequestParam Integer quantity) {
+        return  itemService.updateStock(itemId, quantity)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
+    }
+
     @PutMapping("/increment")
     public ResponseEntity<Item> incrementStock(@RequestParam Long itemId, @RequestParam Integer quantity) {
         return itemService.incrementStock(itemId, quantity)
