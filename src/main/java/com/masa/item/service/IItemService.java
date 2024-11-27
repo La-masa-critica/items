@@ -10,7 +10,6 @@ public interface IItemService {
 
     Optional<Item> createItem(Item item);
 
-    //Item updateItem(Item item);
     Optional<Item> updateStock(Long itemId, Integer quantity);
 
     Optional<Item> incrementStock(Long itemId, Integer quantity);

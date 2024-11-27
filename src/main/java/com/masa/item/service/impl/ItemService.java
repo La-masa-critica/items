@@ -74,6 +74,9 @@ public class ItemService implements IItemService {
                     if (newStock < 0) {
                         return Optional.<Item>empty();
                     }
+                    if (newStock == 0) {
+                        return Optional.of(item.setEnabled(false));
+                    }
                     return Optional.of(itemRepository.save(item.setStock(newStock)));
                 }).orElse(Optional.empty());
     }
@@ -86,7 +89,7 @@ public class ItemService implements IItemService {
     @Override
     @Transactional
     public List<Item> getItems() {
-        return itemRepository.findByEnabledTrue();
+        return itemRepository.findAll();
     }
 
     @Autowired
