@@ -4,7 +4,7 @@ import com.masa.item.model.Item;
 import com.masa.item.repository.ItemRepository;
 import com.masa.item.service.IItemService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ItemService implements IItemService {
-    private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
     @Override
     @Transactional
@@ -90,11 +91,6 @@ public class ItemService implements IItemService {
     @Transactional
     public List<Item> getItems() {
         return itemRepository.findAll();
-    }
-
-    @Autowired
-    public void setItemRepository(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
     }
 }
 

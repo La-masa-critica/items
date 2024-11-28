@@ -3,15 +3,16 @@ package com.masa.item.service.impl;
 import com.masa.item.model.Category;
 import com.masa.item.repository.CategoryRepository;
 import com.masa.item.service.ICategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CategoryService implements ICategoryService {
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public Optional<Category> getCategory(Long categoryId) {
@@ -28,8 +29,4 @@ public class CategoryService implements ICategoryService {
         return categoryRepository.findAll();
     }
 
-    @Autowired
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 }

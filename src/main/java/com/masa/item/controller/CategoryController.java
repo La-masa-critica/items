@@ -2,7 +2,7 @@ package com.masa.item.controller;
 
 import com.masa.item.model.Category;
 import com.masa.item.service.ICategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +10,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/category")
+@AllArgsConstructor
 public class CategoryController {
-    private ICategoryService categoryService;
+    private final ICategoryService categoryService;
 
     @PostMapping("/new")
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
@@ -31,10 +32,4 @@ public class CategoryController {
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(categoryService.getCategories());
     }
-
-    @Autowired
-    public void setCategoryService(ICategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
-
 }

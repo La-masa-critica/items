@@ -3,7 +3,7 @@ package com.masa.item.controller;
 import com.masa.item.model.Item;
 import com.masa.item.service.IItemService;
 import jakarta.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/item")
+@AllArgsConstructor
 public class ItemController {
-    private IItemService itemService;
+    private final IItemService itemService;
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Item> getItem(@PathVariable Long itemId) {
@@ -69,10 +70,5 @@ public class ItemController {
     @GetMapping("/all")
     public ResponseEntity<List<Item>> getItems() {
         return ResponseEntity.ok(itemService.getItems());
-    }
-
-    @Autowired
-    public void setItemService(IItemService itemService) {
-        this.itemService = itemService;
     }
 }
